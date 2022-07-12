@@ -19,7 +19,7 @@ app.use(bodyParser.json());
 
 
 
-let port = 4000
+const port = process.env.PORT || 4000
 
 app.listen(port, () => {
 
@@ -30,6 +30,11 @@ app.listen(port, () => {
     const uri = "mongodb+srv://mehdi:mehdimongodb@cluster0.xuahs.mongodb.net/?retryWrites=true&w=majority";
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
+
+
+    app.get("/get", (req, res) => {
+        res.send("Running")
+    })
 
 
 
@@ -61,16 +66,17 @@ app.listen(port, () => {
 
     app.post('/vote', (req, res) => {
 
-        const party = req.body.name
+        const party = req.body.party
+        const nic = req.body.nic
 
-        console.log(party)
+
 
         client.connect(err => {
 
-            client.db("database0").collection("voting").updateOne({name : party },{$push:{ count : "firebasenew"  }})
+            client.db("database0").collection("voting").updateOne({ name: party }, { $push: { count: nic } })
 
-            .then((ans) => console.log(ans))
-            .catch((err) => console.log(err))
+                .then((ans) => console.log(ans))
+                .catch((err) => console.log(err))
 
 
 
