@@ -64,6 +64,33 @@ app.listen(port, () => {
 
 
 
+
+    app.get('/check', (req, res) => {
+
+
+
+
+
+
+
+        client.connect(err => {
+
+            client.db("database0").collection("voters").find({ name: "voter_list" }).toArray()
+
+                .then((ans) => res.send(ans[0].voters))
+                .catch((err) => console.log(err))
+        })
+
+
+
+    })
+
+
+
+
+
+
+
     app.post('/vote', (req, res) => {
 
         const party = req.body.party
@@ -73,11 +100,18 @@ app.listen(port, () => {
 
         client.connect(err => {
 
-            client.db("database0").collection("voting").updateOne({ name: party }, { $push: { count: nic } })
+            client.db("database0").collection("voters").updateOne({ name: "voter_list" }, { $push: { voters: nic } })
 
                 .then((ans) => console.log(ans))
                 .catch((err) => console.log(err))
 
+
+
+
+            client.db("database0").collection("voting").updateOne({ name: party }, { $push: { count: nic } })
+
+                .then((ans) => console.log(ans))
+                .catch((err) => console.log(err))
 
 
 
